@@ -34,4 +34,8 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# generated media
 *.wav
+*.m4a
+uploads/
+files/
