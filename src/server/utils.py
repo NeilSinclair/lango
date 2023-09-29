@@ -12,10 +12,10 @@ stream = None
 sample_rate = 22500  # in Hz
 buttons_list = []
 word_translation = None
-    
+
 def transcribe_audio():
-    if os.path.exists('./uploads/test.m4a'):
-        with open('./uploads/test.m4a', 'rb') as recording_file:
+    if os.path.exists('../../uploads/test.m4a'):
+        with open('../../uploads/test.m4a', 'rb') as recording_file:
             transcript = openai.Audio.transcribe("whisper-1", recording_file, language='de')
             
             closest_words = get_closest_matches(re.sub(r'[.?!]', '', str.lower(transcript.text)))
@@ -29,7 +29,7 @@ def get_closest_matches(root_word):
     Function that looks in a dictionary to return the closest words (by word distance) to the one spoken. The idea here is to find a word
     that the user may have mispronounced
     '''
-    with open('./files/german_vocab.txt', 'r') as f:
+    with open('../../files/german_vocab.txt', 'r') as f:
         vocab = [line.strip() for line in f]
     target_word = str.lower(re.sub(r'[.!?]', '', root_word))
     distances = [distance(target_word, word) for word in vocab]
@@ -43,14 +43,14 @@ def button_click(word):
     global word_translation
     word = re.sub(r' ', '', word)
     ''' If a button is clicked, check if it's on the list of words and if it isn't, add it to the list. Either way, return a translation'''
-    if not os.path.exists('my_vocab.txt'):
-        with open('./files/my_vocab.txt', 'f') as f:
+    if not os.path.exists('../../files/my_vocab.txt'):
+        with open('../../files/my_vocab.txt', 'f') as f:
             f.write('')
 
-    with open('./files/my_vocab.txt', 'r') as f:
+    with open('../../files/my_vocab.txt', 'r') as f:
         vocab = [line for line in f]
         if word not in vocab:
-            with open('./files/my_vocab.txt', 'a') as ff:
+            with open('../../files/my_vocab.txt', 'a') as ff:
                 ff.write(word+'\n')
     word_translation = chat_gpt_translation(word)
     print(word_translation)

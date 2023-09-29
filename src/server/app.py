@@ -4,7 +4,7 @@ from flask_restful import Resource, Api, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
-from src.utils import *
+from utils import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
@@ -26,7 +26,7 @@ class UploadAudio(Resource):
     def post(self):
         audio_file = request.files['audio']
         filename = secure_filename(audio_file.filename)
-        audio_file.save(os.path.join("uploads", filename))
+        audio_file.save(os.path.join("../../uploads", filename))
 
         # Get the transcription
         closest_words = transcribe_audio()
