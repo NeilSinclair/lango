@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Menu, MenuItem } from 'react-native-material-menu';
 
 const CommonLayout = ({ children }) => {
@@ -15,9 +15,9 @@ const CommonLayout = ({ children }) => {
       <Menu
         visible={visible}
         anchor={
-          <Text onPress={showMenu} style={styles.menuText}>
-            Show menu
-          </Text>
+          <TouchableOpacity onPress={showMenu} style={styles.menuButton}>
+          <Text style={styles.menuText}>Show menu</Text>
+          </TouchableOpacity>
         }
         onRequestClose={hideMenu}
       >
@@ -36,6 +36,9 @@ const CommonLayout = ({ children }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    borderRadius: 20,
+    padding: 5, 
+    marginRight: 20,
   },
   menuText: {
     fontWeight: 'bold',
@@ -44,6 +47,16 @@ const styles = StyleSheet.create({
   menuItem: {
     color: 'blue',
   },
+  menuButton: {
+    // width: 160,
+    backgroundColor: '#dcdedd',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+  }
 });
 
 export default CommonLayout;

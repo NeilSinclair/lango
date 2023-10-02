@@ -4,6 +4,7 @@ import openai
 from Levenshtein import distance
 import re
 import os
+from loguru import logger
 
 
 recording = False
@@ -68,10 +69,27 @@ def chat_gpt_translation(word):
             If it is a noun, I want you to include the article. If there are multiple translations possible, return them all.
             Here are two examples output examples:
             noun: die Absendug -> sending, dispatch
-            adverb: vieliecht -> maybe, perhaps, possibly """}],
+            adverb: vielliecht -> maybe, perhaps, possibly """}],
             temperature=0)
     return chat_completion.choices[0].message.content
 
+def process_reply(reply: str):
+    '''
+    Function that slips the chatGpt reply into type, artikel, wort, translations
+    '''
+    reply = reply.split(': ')
+    word_type = reply[0]
 
+    reply = reply[1].split(' -> ')
+    
+    translation = reply[1]
+    words = reply[0]
+    logger.info(f'words: {words}')
+    if len(words.split(' ')) > 1:
+        article = words.split(' ')[0]
+        word = words.split(' ')[1]
+    else:
+        article = ''
+        word = words
 
-
+    return word_type, article, word, translation

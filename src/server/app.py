@@ -13,11 +13,14 @@ CORS(app)
 api = Api(app)
 
 parser = reqparse.RequestParser()
-parser.add_argument('new_word')
+parser.add_argument('text_string')
 
 class WordDict(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    word_type = db.Column(db.String(128))
+    article = db.Column(db.String(128), nullable=True)
     string_value = db.Column(db.String(128), unique=True)
+    translation = db.Column(db.String(128))
 
 with app.app_context():
     db.create_all()
@@ -32,6 +35,12 @@ class UploadAudio(Resource):
         closest_words = transcribe_audio()
         return jsonify({'matches': closest_words})
     
+class GetClosestMatches(Resource):
+    def get(self):
+        word = request.args.get('word')
+        closest_words = get_closest_matches(re.sub(r'[.?!]', '', str.lower(word)))
+        return jsonify({'matches': closest_words})
+    
 class GetTranscription(Resource):
     def get(self):
         word = request.args.get('word')
@@ -42,21 +51,29 @@ class GetTranscription(Resource):
 class WriteTable(Resource):
     def post(self):
         args = parser.parse_args()
-        incoming_word = args['new_word']
+        incoming_string = args['text_string']
 
-        existing_entry = WordDict.query.filter_by(string_value=incoming_word).first()
+        word_type, article, word, translation = process_reply(incoming_string)
+
+        existing_entry = WordDict.query.filter_by(string_value=word).first()
+        
         if existing_entry:
-            return {'message': f'{incoming_word} already present in database'}
+            return {'message': f'{word} already present in database'}
 
-        new_entry = WordDict(string_value=incoming_word)
+        new_entry = WordDict(
+            word_type=word_type,
+            article=article,
+            string_value=word,
+            translation=translation)
         db.session.add(new_entry)
         db.session.commit()
 
-        return {'message': f'{incoming_word} saved corretly'}
+        return {'message': f'{word} saved correctly'}
 
 api.add_resource(UploadAudio, '/upload')
 api.add_resource(GetTranscription, '/translate')
 api.add_resource(WriteTable, '/write')
+api.add_resource(GetClosestMatches, '/matches')
 
 if __name__ == '__main__':
     app.run(port=3000, host='0.0.0.0', debug=True)
