@@ -43,7 +43,10 @@ def get_closest_matches(root_word):
 def button_click(word):
     global word_translation
     word = re.sub(r' ', '', word)
-    ''' If a button is clicked, check if it's on the list of words and if it isn't, add it to the list. Either way, return a translation'''
+    ''' 
+    If a button is clicked, check if it's on the list of words and if it isn't, add it to the list. Either way, 
+    return a translation
+    '''
     if not os.path.exists('../../files/my_vocab.txt'):
         with open('../../files/my_vocab.txt', 'f') as f:
             f.write('')

@@ -1,61 +1,39 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Menu, MenuItem } from 'react-native-material-menu';
+import { Ionicons } from '@expo/vector-icons';
 
 const CommonLayout = ({ children }) => {
-  const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
 
-  const hideMenu = () => setVisible(false);
-  const showMenu = () => setVisible(true);
-
   return (
-    <View style={styles.container}>
-      <Menu
-        visible={visible}
-        anchor={
-          <TouchableOpacity onPress={showMenu} style={styles.menuButton}>
-          <Text style={styles.menuText}>Show menu</Text>
-          </TouchableOpacity>
-        }
-        onRequestClose={hideMenu}
-      >
-        <MenuItem textStyle={styles.menuItem} onPress={() => { hideMenu(); navigation.navigate('Home'); }}>
-          Home
-        </MenuItem>
-        <MenuItem textStyle={styles.menuItem} onPress={() => { hideMenu(); navigation.navigate('Practice'); }}>
-          Practice
-        </MenuItem>
-      </Menu>
+    <View style={{ flex: 1 }}>
       {children}
+      <View style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Ionicons name="home" size={36} color="orange" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Practice')}>
+          <Ionicons name="md-create" size={36} color="orange" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    borderRadius: 20,
-    padding: 5, 
-    marginRight: 20,
-  },
-  menuText: {
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  menuItem: {
-    color: 'blue',
-  },
-  menuButton: {
-    // width: 160,
-    backgroundColor: '#dcdedd',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
+    container: 
+      {flexDirection: 'row', 
+      justifyContent: 'space-between', 
+      padding: 10, 
+      backgroundColor: '#f4f4f4',
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      marginRight: 10,
+      marginLeft: 10,
+      marginBottom: 10
   }
 });
 
