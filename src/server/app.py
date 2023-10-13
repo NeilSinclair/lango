@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
 from utils import *
+from practice_utils import * 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
@@ -14,6 +15,10 @@ api = Api(app)
 
 parser = reqparse.RequestParser()
 parser.add_argument('text_string')
+
+# Load the database
+sentence_word_practice = SentenceWordPractice()
+sentence_word_practice.load_db()
 
 class WordDict(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,10 +75,24 @@ class WriteTable(Resource):
 
         return {'message': f'{word} saved correctly'}
 
+'''
+I want to pick three words from the database
+Then I want to generate a sentence along with buttons for three words that could go in that space
+I want an iPhone like "on" button to show the translations 
+When a button is pressed, I want feedback to show if it was correct or not
+'''
+
+class SentencePractice(Resource):
+    def get(self):
+        practice_example = sentence_word_practice.generate_practice_example(n=3)
+        return practice_example
+
+
 api.add_resource(UploadAudio, '/upload')
 api.add_resource(GetTranscription, '/translate')
 api.add_resource(WriteTable, '/write')
 api.add_resource(GetClosestMatches, '/matches')
+api.add_resource(SentencePractice, '/sentence_practice')
 
 if __name__ == '__main__':
     app.run(port=3000, host='0.0.0.0', debug=True)

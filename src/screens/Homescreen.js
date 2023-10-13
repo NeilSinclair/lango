@@ -6,7 +6,7 @@ import CommonLayout from './CommonLayout';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { Keyboard } from 'react-native';
 import { styles } from '../styles/HomeScreenStyles';
-import { startRecording, stopRecording, sendRecording, getMatches, getTranslation, sendString } from '../utils/HomeScreenAPI';
+import { startRecording, stopRecording, sendRecording, getMatches, getTranslation, sendString } from '../js_utils/HomeScreenAPI';
 
 const HomeScreen = () => {
   const [buttons, setButtons] = useState([]); // stays in Homescreen.js
